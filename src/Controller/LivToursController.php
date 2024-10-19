@@ -14,7 +14,7 @@ class LivToursController extends AbstractController
     {
         $response = new Response();
 
-        $response->setContent($this->getJsonInMemory($request));
+        $response->setContent(json_encode(array_merge(['message' => 'ok'], $this->getArrayInMemory($request))));
 
         $response->setStatusCode(Response::HTTP_OK);
 
@@ -46,21 +46,21 @@ class LivToursController extends AbstractController
 
         $response->headers->set('Content-Type', 'text/plain');
 
-        $request->getSession()->set('LivTours', ['message' => 'ok', 'pegA' => ['disk1','disk2','disk3','disk4','disk5','disk6','disk7'], 'pegB' => null, 'pegC' => null]);
+        $request->getSession()->set('LivTours', baseArrayLivTours::getPazzle());
 
         return $response->send();
     }
 
-    private function getJsonInMemory(Request $request): string
+    private function getArrayInMemory(Request $request): array
     {
-        if (!$request->getSession()->get('LivTours')) return json_encode(['message' => 'ok', 'pegA' => ['disk1','disk2','disk3','disk4','disk5','disk6','disk7'], 'pegB' => null, 'pegC' => null]);
-        return json_encode($request->getSession()->get('LivTours'));
+        if (!$request->getSession()->get('LivTours')) return baseArrayLivTours::getPazzle();
+        return $request->getSession()->get('LivTours');
     }
 
     private function getChangedJsonInMemory(Request $request, Response $response, string $from = null, string $to = null): string
     {
         $response->setStatusCode(Response::HTTP_BAD_REQUEST);
-        $allPegs = ['pegA', 'pegB', 'pegC'];
+        $allPegs = baseArrayLivTours::getPegs();
 
         if (!in_array($from, $allPegs)) return json_encode(['message' => 'The starting peg does not exist.']);
         if (!in_array($to, $allPegs)) return json_encode(['message' => 'The arrival peg does not exist.']);
@@ -74,16 +74,15 @@ class LivToursController extends AbstractController
         $response->setStatusCode(Response::HTTP_OK);
         $puzzle[$to] = $this->newStateToPeg($puzzle[$from], $puzzle[$to]);
         $puzzle[$from] = $this->newStateFromPeg($puzzle[$from]);
-        $result = array_merge(['message' => 'ok'], $puzzle);
-        $request->getSession()->set('LivTours', $result);
+        $request->getSession()->set('LivTours', $puzzle);
 
-        return json_encode($result);
+        return json_encode(array_merge(['message' => 'ok'], $puzzle));
     }
 
     private function diskIsSmaller(array $from, ?array $to): bool
     {
         if (!$to) return false;
-        if (end($from) > end($to)) return false;
+        if (baseArrayLivTours::diskIsSmaller(end($from), end($to))) return false;
         return true;
     }
 
@@ -102,11 +101,8 @@ class LivToursController extends AbstractController
 
     private function getPuzzle(Request $request): array
     {
-        if (!$request->getSession()->get('LivTours')) return ['pegA' => ['disk1','disk2','disk3','disk4','disk5','disk6','disk7'], 'pegB' => null, 'pegC' => null];
+        if (!$request->getSession()->get('LivTours')) return baseArrayLivTours::getPazzle();
 
-        $puzzleWithMessage = $request->getSession()->get('LivTours');
-        unset($puzzleWithMessage['message']);
-
-        return $puzzleWithMessage;
+        return $request->getSession()->get('LivTours');;
     }
 }
