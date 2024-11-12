@@ -13,7 +13,7 @@ class baseArrayLivTours
         return ['disk1', 'disk2', 'disk3', 'disk4', 'disk5', 'disk6', 'disk7'];
     }
 
-    public static function getPazzle(): array
+    public static function getPuzzle(): array
     {
         $pegs = array_fill_keys(self::getPegs(), null);
         // si può dare qualsiasi nome ai dischi, ma fai attenzione qui

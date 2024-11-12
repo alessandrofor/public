@@ -46,14 +46,14 @@ class LivToursController extends AbstractController
 
         $response->headers->set('Content-Type', 'text/plain');
 
-        $request->getSession()->set('LivTours', baseArrayLivTours::getPazzle());
+        $request->getSession()->set('LivTours', baseArrayLivTours::getPuzzle());
 
         return $response->send();
     }
 
     private function getArrayInMemory(Request $request): array
     {
-        if (!$request->getSession()->get('LivTours')) return baseArrayLivTours::getPazzle();
+        if (!$request->getSession()->get('LivTours')) return baseArrayLivTours::getPuzzle();
         return $request->getSession()->get('LivTours');
     }
 
@@ -101,7 +101,7 @@ class LivToursController extends AbstractController
 
     private function getPuzzle(Request $request): array
     {
-        if (!$request->getSession()->get('LivTours')) return baseArrayLivTours::getPazzle();
+        if (!$request->getSession()->get('LivTours')) return baseArrayLivTours::getPuzzle();
 
         return $request->getSession()->get('LivTours');;
     }
