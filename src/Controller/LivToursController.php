@@ -103,6 +103,6 @@ class LivToursController extends AbstractController
     {
         if (!$request->getSession()->get('LivTours')) return baseArrayLivTours::getPuzzle();
 
-        return $request->getSession()->get('LivTours');;
+        return $request->getSession()->get('LivTours');
     }
 }

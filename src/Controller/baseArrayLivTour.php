@@ -6,10 +6,11 @@ class baseArrayLivTours
 {
     public static function getPegs(): array
     {
-        return ['pegA', 'pegB', 'pegC'];;
+        return ['pegA', 'pegB', 'pegC'];
     }
     private static function getDisks(): array
     {
+        // dal più grande al più piccolo
         return ['disk1', 'disk2', 'disk3', 'disk4', 'disk5', 'disk6', 'disk7'];
     }
 
